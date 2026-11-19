@@ -1,0 +1,44 @@
+
+name: gestion-servicios
+
+services:
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gestion-servicios-php
+    ports:
+      - "8081:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: gestion_servicios
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    container_name: gestion-servicios-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: gestion_servicios
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:
