@@ -50,7 +50,8 @@ try {
         'servicios' => Servicio::class,
         'transaccion-detalles' => TransaccionDetalle::class,
     ];
-    if (preg_match('#^/api/([a-z-]+)(?:/(\d+))?$#', $path, $matches) && isset($resources[$matches[1]])) {
+    if (preg_match('#^/api/([a-z-]+)(?:/(\d+))?$#', $path, $matches) 
+        && isset($resources[$matches[1]])) {
         $class = $resources[$matches[1]];
         $controller = new CrudController(new $class());
         $id = isset($matches[2]) ? (int)$matches[2] : null;
